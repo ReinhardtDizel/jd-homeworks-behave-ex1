@@ -1,13 +1,11 @@
 import java.util.Iterator;
 import java.util.Random;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 public class Randoms implements Iterable<Integer> {
 
     protected Random random;
-    private int min;
-    private int max;
+    private final int min;
+    private final int max;
 
     public Randoms(int min, int max) {
         this.random = new Random();
@@ -17,20 +15,19 @@ public class Randoms implements Iterable<Integer> {
 
     @Override
     public Iterator<Integer> iterator() {
-        return random
-                .ints(min, max)
-                .findFirst()
-                .stream()
-                .iterator();
+        return new Randoms.itr();
     }
 
-    @Override
-    public void forEach(Consumer<? super Integer> action) {
-        Iterable.super.forEach(action);
-    }
+    private class itr implements Iterator<Integer> {
 
-    @Override
-    public Spliterator<Integer> spliterator() {
-        return Iterable.super.spliterator();
+        @Override
+        public boolean hasNext() {
+            return true;
+        }
+
+        @Override
+        public Integer next() {
+            return random.nextInt((max - min) + 1) + min;
+        }
     }
 }
